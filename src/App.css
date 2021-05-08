@@ -1,38 +1,100 @@
 .App {
-  text-align: center;
+  display: flex;
+  background-color: #e4e4e4;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.calculator {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 320px;
+  height: 400px;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: lightgray;
+  border-bottom: 0.25rem solid darkgray;
+  box-shadow: 0 0.2rem 0.2rem #00000022;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.display {
+  height: 30%;
+  padding: 1rem;
+  background: #5faa55;
+  border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
+  color: #000000aa;
+}
+
+.on {
+  filter: brightness(1.2);
+  box-shadow: inset 0 0 2rem #2bff0088;
+}
+
+.display .info {
+  height: 30%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.display .info .history {
+  font-size: 1.5rem;
+}
+
+.display .main {
+  height: 70%;
+  display: flex;
   align-items: center;
+  justify-content: flex-end;
+  font-size: 3.4rem;
+}
+
+.keyboard {
+  height: 70%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  align-items: center;
+  justify-items: center;
+  padding-top: 1rem;
+}
+
+.btn {
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.25rem;
+  background-color: #1cc1d6;
+  height: 90%;
+  width: 90%;
+  border: 0;
+  border-bottom: 0.25rem solid #17a8bb;
+  box-shadow: 0 0.1rem 0.2rem #00000022;
+  border-radius: 1rem;
+  font-weight: bold;
+}
+
+.btn div {
+  width: 100%;
+  height: 100%;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
 }
 
-.App-link {
-  color: #61dafb;
+.btn:active {
+  filter: brightness(0.95);
+  border-bottom: 0;
+  box-shadow: 0 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.equal {
+  grid-row: auto / span 2;
+  height: 97.5%;
+  background-color: #d61c4b;
+  border-bottom: 0.3rem solid #b1173d;
+  height: 95%;
 }
