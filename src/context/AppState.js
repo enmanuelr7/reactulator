@@ -81,23 +81,23 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // const backSpace = () => {
-  //   if (state.isOn) {
-  //     if (state.displayValue.length > 1) {
-  //       setState({
-  //         ...state,
-  //         displayValue: toNumber(
-  //           state.displayValue.substr(0, state.displayValue.length - 1)
-  //         ),
-  //       });
-  //     } else {
-  //       setState({
-  //         ...state,
-  //         displayValue: '0',
-  //       });
-  //     }
-  //   }
-  // };
+  const backSpace = () => {
+    if (state.isOn) {
+      if (state.displayValue.length > 1) {
+        setState({
+          ...state,
+          displayValue: toNumber(
+            state.displayValue.substr(0, state.displayValue.length - 1)
+          ),
+        });
+      } else {
+        setState({
+          ...state,
+          displayValue: ZERO,
+        });
+      }
+    }
+  };
 
   const operate = (operation, num1, num2) => {
     return operations[operation](num1, num2);
@@ -121,7 +121,7 @@ export const AppProvider = ({ children }) => {
     togglePower,
     appendNumber,
     appendDot,
-    // backSpace,
+    backSpace,
     setOperation,
   };
 
