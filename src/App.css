@@ -92,7 +92,7 @@
   box-shadow: 0 0;
 }
 
-.equal {
+.equals {
   grid-row: auto / span 2;
   height: 97.5%;
   background-color: #d61c4b;

@@ -6,7 +6,7 @@ const initialState = {
   displayValue: '',
   operation: null,
   historyIndex: null,
-  num1: 0,
+  num1: null,
   shouldClearScreen: false,
 };
 
@@ -47,13 +47,19 @@ export const AppProvider = ({ children }) => {
       (state.displayValue.length < DISPLAY_VALUE_MAX_LENGTH ||
         state.shouldClearScreen)
     ) {
-      setState({
-        ...state,
-        displayValue: toNumber(
-          state.shouldClearScreen ? data : state.displayValue + data
-        ),
-        shouldClearScreen: false,
-      });
+      if (state.shouldClearScreen) {
+        setState({
+          ...state,
+          displayValue: toNumber(data),
+          shouldClearScreen: false,
+        });
+      } else {
+        setState({
+          ...state,
+          displayValue: toNumber(state.displayValue + data),
+          shouldClearScreen: false,
+        });
+      }
     }
   };
 
@@ -105,12 +111,39 @@ export const AppProvider = ({ children }) => {
 
   const setOperation = (operation) => {
     if (state.isOn) {
+      if (state.num1) {
+        setState({
+          ...state,
+          operation,
+          num1: +toNumber(
+            operate(state.operation, state.num1, +state.displayValue)
+          ),
+          displayValue: toNumber(
+            operate(state.operation, state.num1, +state.displayValue)
+          ),
+          shouldClearScreen: true,
+        });
+      } else {
+        setState({
+          ...state,
+          operation,
+          num1: +toNumber(state.displayValue),
+          displayValue: toNumber(state.displayValue),
+          shouldClearScreen: true,
+        });
+      }
+    }
+  };
+
+  const equals = () => {
+    if (state.isOn) {
       setState({
         ...state,
-        operation,
-        num1: +toNumber(state.displayValue),
-        displayValue: toNumber(state.displayValue),
-        shouldClearScreen: true,
+        displayValue: toNumber(
+          operate(state.operation, state.num1, +state.displayValue)
+        ),
+        num1: null,
+        operation: null,
       });
     }
   };
@@ -123,6 +156,7 @@ export const AppProvider = ({ children }) => {
     appendDot,
     backSpace,
     setOperation,
+    equals,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

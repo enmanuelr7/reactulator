@@ -1,4 +1,4 @@
-import { FaHistory, FaEquals } from 'react-icons/fa';
+import { FaHistory } from 'react-icons/fa';
 
 import Button from './Button';
 import PowerButton from './PowerButton';
@@ -6,6 +6,7 @@ import NumberButton from './NumberButton';
 import DecimalPointButton from './DecimalPointButton';
 import BackSpaceButton from './BackSpaceButton';
 import OperatorButton from './OperatorButton';
+import EqualsButton from './EqualsButton';
 
 const Keyboard = () => {
   return (
@@ -26,9 +27,7 @@ const Keyboard = () => {
       <NumberButton data="2" />
       <NumberButton data="3" />
       <OperatorButton operation="multiply" />
-      <Button equal>
-        <FaEquals />
-      </Button>
+      <EqualsButton />
       <NumberButton data="0" />
       <DecimalPointButton />
       <BackSpaceButton />

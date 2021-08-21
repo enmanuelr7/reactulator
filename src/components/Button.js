@@ -1,6 +1,6 @@
-const Button = ({ children, equal, action }) => {
+const Button = ({ children, equals, action }) => {
   return (
-    <button className={`btn ${equal ? 'equal' : ''}`} onClick={action}>
+    <button className={`btn ${equals ? 'equals' : ''}`} onClick={action}>
       <div>{children}</div>
     </button>
   );
