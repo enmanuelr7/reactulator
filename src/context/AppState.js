@@ -88,7 +88,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const backSpace = () => {
-    if (state.isOn) {
+    if (state.isOn && !state.shouldClearScreen) {
       if (state.displayValue.length > 1) {
         setState({
           ...state,
@@ -111,7 +111,12 @@ export const AppProvider = ({ children }) => {
 
   const setOperation = (operation) => {
     if (state.isOn) {
-      if (state.num1) {
+      if (state.shouldClearScreen) {
+        setState({
+          ...state,
+          operation,
+        });
+      } else if (state.num1) {
         setState({
           ...state,
           operation,
@@ -136,7 +141,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const equals = () => {
-    if (state.isOn) {
+    if (state.isOn && state.operation) {
       setState({
         ...state,
         displayValue: toNumber(
