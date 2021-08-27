@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
 // inital state
 const initialState = {
@@ -8,11 +8,13 @@ const initialState = {
   historyIndex: null,
   num1: null,
   shouldClearScreen: false,
+  error: false,
 };
 
 const DISPLAY_VALUE_MAX_LENGTH = 10;
 const DOT = '.';
 const ZERO = '0';
+const ERROR_MSG = 'ERROR';
 
 const operations = {
   add: (a, b) => a + b,
@@ -21,8 +23,29 @@ const operations = {
   divide: (a, b) => a / b,
 };
 
-const toNumber = (data) => {
-  return String(+data);
+const operate = (operation, num1, num2) => {
+  return operations[operation](num1, num2);
+};
+
+const formatNumber = (number) => {
+  if (
+    isNaN(number) ||
+    [Infinity, -Infinity].some((value) => value === number) ||
+    String(Math.ceil(number)).length > DISPLAY_VALUE_MAX_LENGTH
+  ) {
+    return ERROR_MSG;
+  }
+
+  if (String(number).length > DISPLAY_VALUE_MAX_LENGTH) {
+    if (!String(number).includes(DOT)) {
+      return ERROR_MSG;
+    }
+    const wholePartLength = String(Math.trunc(number)).length;
+    return number.toFixed(DISPLAY_VALUE_MAX_LENGTH - wholePartLength -1)
+  }
+
+
+  return String(number);
 };
 
 // create context
@@ -31,6 +54,15 @@ export const AppContext = createContext(initialState);
 // provider component
 export const AppProvider = ({ children }) => {
   const [state, setState] = useState(initialState);
+
+  useEffect(() => {
+    if (state.displayValue === ERROR_MSG && !state.error) {
+      setState({
+        ...state,
+        error: true,
+      });
+    }
+  }, [state]);
 
   // actions
   const togglePower = () => {
@@ -44,19 +76,21 @@ export const AppProvider = ({ children }) => {
   const appendNumber = (data) => {
     if (
       state.isOn &&
+      !state.error &&
       (state.displayValue.length < DISPLAY_VALUE_MAX_LENGTH ||
         state.shouldClearScreen)
     ) {
       if (state.shouldClearScreen) {
         setState({
           ...state,
-          displayValue: toNumber(data),
+          displayValue: data,
           shouldClearScreen: false,
         });
       } else {
         setState({
           ...state,
-          displayValue: toNumber(state.displayValue + data),
+          displayValue:
+            state.displayValue === ZERO ? data : state.displayValue + data,
           shouldClearScreen: false,
         });
       }
@@ -66,6 +100,7 @@ export const AppProvider = ({ children }) => {
   const appendDot = () => {
     if (
       state.isOn &&
+      !state.error &&
       (state.displayValue.length < DISPLAY_VALUE_MAX_LENGTH - 1 ||
         state.shouldClearScreen)
     ) {
@@ -88,12 +123,13 @@ export const AppProvider = ({ children }) => {
   };
 
   const backSpace = () => {
-    if (state.isOn && !state.shouldClearScreen) {
+    if (state.isOn && !state.error && !state.shouldClearScreen) {
       if (state.displayValue.length > 1) {
         setState({
           ...state,
-          displayValue: toNumber(
-            state.displayValue.substr(0, state.displayValue.length - 1)
+          displayValue: state.displayValue.substr(
+            0,
+            state.displayValue.length - 1
           ),
         });
       } else {
@@ -105,12 +141,8 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const operate = (operation, num1, num2) => {
-    return operations[operation](num1, num2);
-  };
-
   const setOperation = (operation) => {
-    if (state.isOn) {
+    if (state.isOn && !state.error) {
       if (state.shouldClearScreen) {
         setState({
           ...state,
@@ -120,10 +152,10 @@ export const AppProvider = ({ children }) => {
         setState({
           ...state,
           operation,
-          num1: +toNumber(
+          num1: +formatNumber(
             operate(state.operation, state.num1, +state.displayValue)
           ),
-          displayValue: toNumber(
+          displayValue: formatNumber(
             operate(state.operation, state.num1, +state.displayValue)
           ),
           shouldClearScreen: true,
@@ -132,8 +164,8 @@ export const AppProvider = ({ children }) => {
         setState({
           ...state,
           operation,
-          num1: +toNumber(state.displayValue),
-          displayValue: toNumber(state.displayValue),
+          num1: +state.displayValue,
+          displayValue: formatNumber(+state.displayValue),
           shouldClearScreen: true,
         });
       }
@@ -141,10 +173,10 @@ export const AppProvider = ({ children }) => {
   };
 
   const equals = () => {
-    if (state.isOn && state.operation) {
+    if (state.isOn && state.operation && !state.error) {
       setState({
         ...state,
-        displayValue: toNumber(
+        displayValue: formatNumber(
           operate(state.operation, state.num1, +state.displayValue)
         ),
         num1: null,
