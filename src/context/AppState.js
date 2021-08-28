@@ -206,6 +206,12 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const historyAction = () => {
+    if (state.isOn) {
+      console.log('history!')
+    }
+  }
+
   // value
   const value = {
     state,
@@ -215,6 +221,7 @@ export const AppProvider = ({ children }) => {
     backSpace,
     setOperation,
     equals,
+    historyAction,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

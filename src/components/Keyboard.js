@@ -1,12 +1,10 @@
-import { FaHistory } from 'react-icons/fa';
-
-import Button from './Button';
 import PowerButton from './PowerButton';
 import NumberButton from './NumberButton';
 import DecimalPointButton from './DecimalPointButton';
 import BackSpaceButton from './BackSpaceButton';
 import OperatorButton from './OperatorButton';
 import EqualsButton from './EqualsButton';
+import HistoryButton from './HistoryButton';
 
 const Keyboard = () => {
   return (
@@ -20,9 +18,7 @@ const Keyboard = () => {
       <NumberButton data="5" />
       <NumberButton data="6" />
       <OperatorButton operation="subtract" />
-      <Button>
-        <FaHistory />
-      </Button>
+      <HistoryButton />
       <NumberButton data="1" />
       <NumberButton data="2" />
       <NumberButton data="3" />
