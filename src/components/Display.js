@@ -29,9 +29,9 @@ const Display = () => {
   return (
     <div className={`display ${isOn ? 'on' : ''}`}>
       <div className="info">
-        {historyIndex !== null && (
-          <span className="history">{historyIndex + 1}</span>
-        )}
+        <span className="history">
+          {historyIndex !== null ? historyIndex + 1 : ''}
+        </span>
         <span className="operator">{operator}</span>
       </div>
       <div className="main">{displayValue}</div>

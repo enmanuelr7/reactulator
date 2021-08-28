@@ -223,6 +223,7 @@ export const AppProvider = ({ children }) => {
         operation: null,
         appendResult: true,
         historyIndex: null,
+        shouldClearScreen: true,
       });
     }
   };
