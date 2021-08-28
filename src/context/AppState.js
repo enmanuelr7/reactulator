@@ -6,15 +6,18 @@ const initialState = {
   displayValue: '',
   operation: null,
   historyIndex: null,
+  history: [],
   num1: null,
   shouldClearScreen: false,
   error: false,
+  appendResult: false,
 };
 
 const DISPLAY_VALUE_MAX_LENGTH = 10;
 const DOT = '.';
 const ZERO = '0';
 const ERROR_MSG = 'ERROR';
+const HISTORY_MAX_LENGTH =5;
 
 const operations = {
   add: (a, b) => a + b,
@@ -48,6 +51,14 @@ const formatNumber = (number) => {
   return String(number);
 };
 
+const appendResultFunc = (history, newValue) => {
+  const historyLength = history.unshift(newValue)
+  if (historyLength > HISTORY_MAX_LENGTH) {
+    history.pop();
+  }
+  return history;
+}
+
 // create context
 export const AppContext = createContext(initialState);
 
@@ -61,6 +72,14 @@ export const AppProvider = ({ children }) => {
         ...state,
         error: true,
       });
+    }
+
+    if (state.appendResult && state.displayValue !== ERROR_MSG) {
+      setState({
+        ...state,
+        history: appendResultFunc(state.history, state.displayValue),
+        appendResult: false,
+      })
     }
   }, [state]);
 
@@ -159,6 +178,7 @@ export const AppProvider = ({ children }) => {
             operate(state.operation, state.num1, +state.displayValue)
           ),
           shouldClearScreen: true,
+          appendResult: true,
         });
       } else {
         setState({
@@ -181,6 +201,7 @@ export const AppProvider = ({ children }) => {
         ),
         num1: null,
         operation: null,
+        appendResult: true,
       });
     }
   };
