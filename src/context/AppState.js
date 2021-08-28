@@ -12,6 +12,7 @@ const initialState = {
   error: false,
   appendResult: false,
   updateDisplayValue: false,
+  canChangeOp: false,
 };
 
 const DISPLAY_VALUE_MAX_LENGTH = 10;
@@ -90,8 +91,9 @@ export const AppProvider = ({ children }) => {
         appendResult: false,
       });
     }
-
-    if (state.updateDisplayValue && state.historyIndex && state.history.length) {
+    if (
+      state.updateDisplayValue
+    ) {
       setState({
         ...state,
         updateDisplayValue: false,
@@ -179,13 +181,7 @@ export const AppProvider = ({ children }) => {
 
   const setOperation = (operation) => {
     if (state.isOn && !state.error) {
-      if (state.shouldClearScreen) {
-        setState({
-          ...state,
-          operation,
-          historyIndex: null,
-        });
-      } else if (state.num1) {
+      if (state.num1 !== null && !state.canChangeOp) {
         setState({
           ...state,
           operation,
@@ -207,6 +203,7 @@ export const AppProvider = ({ children }) => {
           displayValue: formatNumber(+state.displayValue),
           shouldClearScreen: true,
           historyIndex: null,
+          canChangeOp: true,
         });
       }
     }
