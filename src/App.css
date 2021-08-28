@@ -76,6 +76,7 @@
   box-shadow: 0 0.1rem 0.2rem #00000022;
   border-radius: 1rem;
   font-weight: bold;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn div {
