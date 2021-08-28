@@ -11,13 +11,14 @@ const initialState = {
   shouldClearScreen: false,
   error: false,
   appendResult: false,
+  updateDisplayValue: false,
 };
 
 const DISPLAY_VALUE_MAX_LENGTH = 10;
 const DOT = '.';
 const ZERO = '0';
 const ERROR_MSG = 'ERROR';
-const HISTORY_MAX_LENGTH =5;
+const HISTORY_MAX_LENGTH = 5;
 
 const operations = {
   add: (a, b) => a + b,
@@ -44,20 +45,28 @@ const formatNumber = (number) => {
       return ERROR_MSG;
     }
     const wholePartLength = String(Math.trunc(number)).length;
-    return number.toFixed(DISPLAY_VALUE_MAX_LENGTH - wholePartLength -1)
+    return number.toFixed(DISPLAY_VALUE_MAX_LENGTH - wholePartLength - 1);
   }
-
 
   return String(number);
 };
 
 const appendResultFunc = (history, newValue) => {
-  const historyLength = history.unshift(newValue)
+  const historyLength = history.unshift(newValue);
   if (historyLength > HISTORY_MAX_LENGTH) {
     history.pop();
   }
   return history;
-}
+};
+
+const setHistoryIndex = (history, historyIndex) => {
+  if (history.length) {
+    if (historyIndex === null || historyIndex === history.length - 1) {
+      return 0;
+    }
+    return historyIndex + 1;
+  }
+};
 
 // create context
 export const AppContext = createContext(initialState);
@@ -79,7 +88,15 @@ export const AppProvider = ({ children }) => {
         ...state,
         history: appendResultFunc(state.history, state.displayValue),
         appendResult: false,
-      })
+      });
+    }
+
+    if (state.updateDisplayValue && state.historyIndex && state.history.length) {
+      setState({
+        ...state,
+        updateDisplayValue: false,
+        displayValue: state.history[state.historyIndex],
+      });
     }
   }, [state]);
 
@@ -166,6 +183,7 @@ export const AppProvider = ({ children }) => {
         setState({
           ...state,
           operation,
+          historyIndex: null,
         });
       } else if (state.num1) {
         setState({
@@ -179,6 +197,7 @@ export const AppProvider = ({ children }) => {
           ),
           shouldClearScreen: true,
           appendResult: true,
+          historyIndex: null,
         });
       } else {
         setState({
@@ -187,6 +206,7 @@ export const AppProvider = ({ children }) => {
           num1: +state.displayValue,
           displayValue: formatNumber(+state.displayValue),
           shouldClearScreen: true,
+          historyIndex: null,
         });
       }
     }
@@ -202,15 +222,21 @@ export const AppProvider = ({ children }) => {
         num1: null,
         operation: null,
         appendResult: true,
+        historyIndex: null,
       });
     }
   };
 
   const historyAction = () => {
-    if (state.isOn) {
-      console.log('history!')
+    if (state.isOn && state.history.length) {
+      setState({
+        ...state,
+        historyIndex: setHistoryIndex(state.history, state.historyIndex),
+        updateDisplayValue: true,
+        shouldClearScreen: false,
+      });
     }
-  }
+  };
 
   // value
   const value = {
