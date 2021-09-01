@@ -49,6 +49,10 @@ const formatNumber = (number) => {
     return number.toFixed(DISPLAY_VALUE_MAX_LENGTH - wholePartLength - 1);
   }
 
+  if (String(number).includes('e-')) {
+    return ZERO;
+  }
+
   return String(number);
 };
 
@@ -91,9 +95,7 @@ export const AppProvider = ({ children }) => {
         appendResult: false,
       });
     }
-    if (
-      state.updateDisplayValue
-    ) {
+    if (state.updateDisplayValue) {
       setState({
         ...state,
         updateDisplayValue: false,
