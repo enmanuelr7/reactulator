@@ -45,8 +45,11 @@ const formatNumber = (number) => {
     if (!String(number).includes(DOT)) {
       return ERROR_MSG;
     }
+    if (String(number).includes('e-')) {
+      return ZERO;
+    }
     const wholePartLength = String(Math.trunc(number)).length;
-    return number.toFixed(DISPLAY_VALUE_MAX_LENGTH - wholePartLength - 1);
+    return String(+number.toFixed(DISPLAY_VALUE_MAX_LENGTH - wholePartLength - 1));
   }
 
   if (String(number).includes('e-')) {
@@ -125,6 +128,7 @@ export const AppProvider = ({ children }) => {
           ...state,
           displayValue: data,
           shouldClearScreen: false,
+          canChangeOp: false,
         });
       } else {
         setState({
@@ -132,6 +136,7 @@ export const AppProvider = ({ children }) => {
           displayValue:
             state.displayValue === ZERO ? data : state.displayValue + data,
           shouldClearScreen: false,
+          canChangeOp: false,
         });
       }
     }
@@ -149,6 +154,7 @@ export const AppProvider = ({ children }) => {
           ...state,
           displayValue: ZERO + DOT,
           shouldClearScreen: false,
+          canChangeOp: false,
         });
       } else {
         setState({
@@ -157,6 +163,7 @@ export const AppProvider = ({ children }) => {
             ? state.displayValue
             : state.displayValue + DOT,
           shouldClearScreen: false,
+          canChangeOp: false,
         });
       }
     }
@@ -196,6 +203,7 @@ export const AppProvider = ({ children }) => {
           shouldClearScreen: true,
           appendResult: true,
           historyIndex: null,
+          canChangeOp: true,
         });
       } else {
         setState({
